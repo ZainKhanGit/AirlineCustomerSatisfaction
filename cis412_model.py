@@ -9,8 +9,8 @@ Original file is located at
 
 import pandas as pd
 
-train = pd.read_csv('/content/sample_data/train.csv')
-test = pd.read_csv('/content/sample_data/test.csv')
+train = pd.read_csv("train.csv")
+test = pd.read_csv("test.csv")
 
 train.head()
 test.head()
