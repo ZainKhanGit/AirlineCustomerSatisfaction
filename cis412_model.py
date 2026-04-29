@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.tree import DecisionTreeClassifier
@@ -41,7 +41,13 @@ if "satisfaction" not in train.columns or "satisfaction" not in test.columns:
     st.stop()
 
 st.sidebar.header("Model Settings")
-max_depth = st.sidebar.slider("Decision Tree max depth", 1, 20, 7)
+
+model_type = st.sidebar.selectbox(
+    "Choose Model",
+    ["Decision Tree", "Random Forest"]
+)
+
+max_depth = st.sidebar.slider("Max Depth", 1, 20, 7)
 
 st.subheader("Data Preview")
 col1, col2 = st.columns(2)
@@ -84,13 +90,22 @@ all_feature_names = list(encoded_feature_names) + other_features
 X_train_encoded = pd.DataFrame(X_train_encoded, columns=all_feature_names, index=X_train.index)
 X_test_encoded = pd.DataFrame(X_test_encoded, columns=all_feature_names, index=X_test.index)
 
-st.subheader("Model Training")
-model = DecisionTreeClassifier(
-    criterion="entropy",
-    random_state=0,
-    max_depth=max_depth
+if model_type == "Decision Tree":
+    model = DecisionTreeClassifier(
+        criterion="entropy",
+        random_state=0,
+        max_depth=max_depth
+    )
+else:
+    model = RandomForestClassifier(
+        n_estimators=150,
+        max_depth=max_depth,
+        random_state=0
+    )
 )
 model.fit(X_train_encoded, y_train)
+
+st.subheader(f"Model: {model_type}")
 
 y_pred = model.predict(X_test_encoded)
 y_prob = model.predict_proba(X_test_encoded)[:, 1]
