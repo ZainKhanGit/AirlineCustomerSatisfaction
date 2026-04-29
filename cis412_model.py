@@ -190,7 +190,21 @@ input_dict = {
     "Inflight entertainment": inflight_entertainment
 }
 
-input_df = pd.DataFrame([input_dict])
+# Start with a real row to keep all columns
+input_df = X_train.iloc[[0]].copy()
+
+# Override only the user inputs
+input_df["Gender"] = gender
+input_df["Customer Type"] = customer_type
+input_df["Type of Travel"] = travel_type
+input_df["Class"] = flight_class
+input_df["Age"] = age
+input_df["Flight Distance"] = flight_distance
+input_df["Inflight wifi service"] = wifi
+input_df["Online boarding"] = online_boarding
+input_df["Seat comfort"] = seat_comfort
+input_df["Inflight entertainment"] = inflight_entertainment
+
 
 # --- Apply same preprocessing ---
 input_encoded = preprocessor.transform(input_df)
