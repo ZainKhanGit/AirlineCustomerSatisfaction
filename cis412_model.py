@@ -102,7 +102,7 @@ else:
         max_depth=max_depth,
         random_state=0
     )
-)
+
 model.fit(X_train_encoded, y_train)
 
 st.subheader(f"Model: {model_type}")
