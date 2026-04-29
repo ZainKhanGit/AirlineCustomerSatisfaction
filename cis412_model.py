@@ -25,16 +25,14 @@ def load_data():
     train = pd.read_csv("train.csv")
     test = pd.read_csv("test.csv")
 
-    def drop_extra_index(df):
-        first_col = str(df.columns[0])
-        if first_col.startswith("Unnamed") or first_col.lower() in {"id", "index"}:
-            return df.iloc[:, 1:].copy()
-        return df.copy()
+    # Drop ID column if it exists
+    for df in [train, test]:
+        if "id" in df.columns:
+            df.drop(columns=["id"], inplace=True)
+        if "Unnamed: 0" in df.columns:
+            df.drop(columns=["Unnamed: 0"], inplace=True)
 
-    train = drop_extra_index(train)
-    test = drop_extra_index(test)
     return train, test
-
 
 train, test = load_data()
 
