@@ -97,10 +97,11 @@ if model_type == "Decision Tree":
         max_depth=max_depth
     )
 else:
-    model = RandomForestClassifier(
-        n_estimators=150,
-        max_depth=max_depth,
-        random_state=0
+ model = RandomForestClassifier(
+    n_estimators=50,   # ↓ reduce from 150
+    max_depth=max_depth,
+    random_state=0,
+    n_jobs=-1          # uses all cores efficiently
     )
 
 model.fit(X_train_encoded, y_train)
