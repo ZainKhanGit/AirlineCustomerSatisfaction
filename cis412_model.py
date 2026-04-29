@@ -157,3 +157,51 @@ ax.set_ylabel("Number of Customers")
 ax.set_title("Satisfaction Distribution by Customer Type")
 ax.legend(title="Satisfaction")
 st.pyplot(fig)
+
+st.header("🔮 Predict Customer Satisfaction")
+
+st.write("Enter passenger details to predict satisfaction:")
+
+# --- User Inputs ---
+gender = st.selectbox("Gender", ["Male", "Female"])
+customer_type = st.selectbox("Customer Type", ["Loyal Customer", "disloyal Customer"])
+travel_type = st.selectbox("Type of Travel", ["Business travel", "Personal Travel"])
+flight_class = st.selectbox("Class", ["Business", "Eco", "Eco Plus"])
+
+age = st.slider("Age", 10, 80, 30)
+flight_distance = st.slider("Flight Distance", 0, 5000, 1000)
+
+wifi = st.slider("Inflight wifi service (0-5)", 0, 5, 3)
+online_boarding = st.slider("Online boarding (0-5)", 0, 5, 3)
+seat_comfort = st.slider("Seat comfort (0-5)", 0, 5, 3)
+inflight_entertainment = st.slider("Inflight entertainment (0-5)", 0, 5, 3)
+
+# --- Create input dataframe ---
+input_dict = {
+    "Gender": gender,
+    "Customer Type": customer_type,
+    "Type of Travel": travel_type,
+    "Class": flight_class,
+    "Age": age,
+    "Flight Distance": flight_distance,
+    "Inflight wifi service": wifi,
+    "Online boarding": online_boarding,
+    "Seat comfort": seat_comfort,
+    "Inflight entertainment": inflight_entertainment
+}
+
+input_df = pd.DataFrame([input_dict])
+
+# --- Apply same preprocessing ---
+input_encoded = preprocessor.transform(input_df)
+input_encoded = pd.DataFrame(input_encoded, columns=all_feature_names)
+
+# --- Prediction ---
+if st.button("Predict Satisfaction"):
+    prediction = model.predict(input_encoded)[0]
+    prob = model.predict_proba(input_encoded)[0][1]
+
+    if prediction == 1:
+        st.success(f"✅ Passenger is likely SATISFIED ({prob:.2%} confidence)")
+    else:
+        st.error(f"❌ Passenger is likely NOT satisfied ({1-prob:.2%} confidence)")
